@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class BookController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -52,11 +52,18 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Book books)
         {
-            if (ModelState.IsValid)
+            System.Console.WriteLine(books);
+            try
             {
-                _context.Add(books);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(books);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            } catch (DbUpdateException)
+            {
+                ModelState.AddModelError("Erro", "Não foi possível inserir os dados");
             }
 
             return View(books);

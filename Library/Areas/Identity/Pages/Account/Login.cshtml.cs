@@ -106,6 +106,7 @@ namespace Library.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            System.Diagnostics.Debug.WriteLine("frango", Input.Password);
 
             if (ModelState.IsValid)
             {
